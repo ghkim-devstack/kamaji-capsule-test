@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sveltos-profiles
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: https://github.com/ghkim-devstack/kamaji-capsule-test.git
+    targetRevision: main
+    path: sveltos/profiles
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: projectsveltos
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
