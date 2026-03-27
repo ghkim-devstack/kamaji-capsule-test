@@ -7,16 +7,7 @@ spec:
     matchLabels:
       env: tenant-b
   syncMode: Continuous
-  helmCharts:
-    - repositoryURL: https://charts.bitnami.com/bitnami
-      repositoryName: bitnami
-      chartName: bitnami/nginx
-      chartVersion: 18.1.11
-      releaseName: nginx-demo
-      releaseNamespace: nginx-demo
-      helmChartAction: Install
-      values: |
-        image:
-          registry: docker.io
-          repository: nginx
-          tag: "1.25"
+  policyRefs:
+    - kind: ConfigMap
+      namespace: projectsveltos
+      name: nginx-demo-manifests
