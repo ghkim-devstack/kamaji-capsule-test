@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-solar-manifests
+  namespace: projectsveltos
+data:
+  namespace.yaml: |
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: solar-dev
+      labels:
+        capsule.clastix.io/tenant: solar
+
+  deployment.yaml: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx-solar
+      namespace: solar-dev
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: nginx-solar
+      template:
+        metadata:
+          labels:
+            app: nginx-solar
+        spec:
+          containers:
+            - name: nginx
+              image: nginx:1.25
+              ports:
+                - containerPort: 80
+
+  service.yaml: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx-solar
+      namespace: solar-dev
+    spec:
+      type: ClusterIP
+      selector:
+        app: nginx-solar
+      ports:
+        - port: 80
+          targetPort: 80
