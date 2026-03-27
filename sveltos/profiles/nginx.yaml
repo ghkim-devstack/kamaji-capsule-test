@@ -1,0 +1,17 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: nginx-demo
+spec:
+  clusterSelector:
+    matchLabels:
+      env: tenant-b
+  syncMode: Continuous
+  helmCharts:
+    - repositoryURL: https://charts.bitnami.com/bitnami
+      repositoryName: bitnami
+      chartName: bitnami/nginx
+      chartVersion: 18.1.11
+      releaseName: nginx-demo
+      releaseNamespace: nginx-demo
+      helmChartAction: Install
