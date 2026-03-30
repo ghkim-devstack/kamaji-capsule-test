@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-multi-tenant-manifests
+  namespace: projectsveltos
+data:
+  # ----------------------
+  # nova
+  # ----------------------
+  nova-ns.yaml: |
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: nova-dev2
+      labels:
+        capsule.clastix.io/tenant: nova
+
+  nova-deploy.yaml: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx-nova
+      namespace: nova-dev2
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: nginx-nova
+      template:
+        metadata:
+          labels:
+            app: nginx-nova
+        spec:
+          containers:
+            - name: nginx
+              image: nginx:1.25
+              ports:
+                - containerPort: 80
+
+  nova-svc.yaml: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx-nova
+      namespace: nova-dev2
+    spec:
+      selector:
+        app: nginx-nova
+      ports:
+        - port: 80
+          targetPort: 80
+
+  # ----------------------
+  # terra
+  # ----------------------
+  terra-ns.yaml: |
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: terra-dev
+      labels:
+        capsule.clastix.io/tenant: terra
+
+  terra-deploy.yaml: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx-terra
+      namespace: terra-dev
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: nginx-terra
+      template:
+        metadata:
+          labels:
+            app: nginx-terra
+        spec:
+          containers:
+            - name: nginx
+              image: nginx:1.25
+              ports:
+                - containerPort: 80
+
+  terra-svc.yaml: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx-terra
+      namespace: terra-dev
+    spec:
+      selector:
+        app: nginx-terra
+      ports:
+        - port: 80
+          targetPort: 80
