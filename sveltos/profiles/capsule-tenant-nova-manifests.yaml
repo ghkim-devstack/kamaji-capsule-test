@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: capsule-tenant-nova-manifests
+  namespace: projectsveltos
+data:
+  tenant.yaml: |
+    apiVersion: capsule.clastix.io/v1beta2
+    kind: Tenant
+    metadata:
+      name: nova
+    spec:
+      owners:
+        - name: alice
+          kind: User
