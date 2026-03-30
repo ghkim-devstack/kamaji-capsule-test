@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: capsule-config-manifests
+  namespace: projectsveltos
+data:
+  capsuleconfiguration.yaml: |
+    apiVersion: capsule.clastix.io/v1beta2
+    kind: CapsuleConfiguration
+    metadata:
+      name: default
+    spec:
+      administrators: []
+      allowServiceAccountPromotion: false
+      enableTLSReconciler: true
+      forceTenantPrefix: false
+      ignoreUserWithGroups: []
+      nodeMetadata:
+        forbiddenAnnotations:
+          denied: []
+          deniedRegex: ""
+        forbiddenLabels:
+          denied: []
+          deniedRegex: ""
+      overrides:
+        TLSSecretName: capsule-tls
+        mutatingWebhookConfigurationName: capsule-mutating-webhook-configuration
+        validatingWebhookConfigurationName: capsule-validating-webhook-configuration
+      protectedNamespaceRegex: ""
+      userGroups: []
+      userNames: []
+      users:
+        - kind: Group
+          name: projectcapsule.dev
+        - kind: Group
+          name: solar
+        - kind: Group
+          name: terra
