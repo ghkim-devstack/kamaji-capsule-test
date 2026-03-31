@@ -36,3 +36,5 @@ data:
           name: solar
         - kind: Group
           name: terra
+        - kind: Group
+          name: atlas
