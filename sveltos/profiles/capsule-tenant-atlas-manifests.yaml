@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: capsule-tenant-atlas-manifests
+  namespace: projectsveltos
+data:
+  tenant-atlas.yaml: |
+    apiVersion: capsule.clastix.io/v1beta2
+    kind: Tenant
+    metadata:
+      name: atlas
+    spec:
+      owners:
+        - name: atlas
+          kind: Group
