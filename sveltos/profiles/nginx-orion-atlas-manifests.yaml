@@ -1,0 +1,157 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-orion-atlas-manifests
+  namespace: projectsveltos
+data:
+  # ----------------------
+  # orion
+  # ----------------------
+  orion-ns.yaml: |
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: orion-dev
+      labels:
+        capsule.clastix.io/tenant: orion
+
+  orion-rb-admin.yaml: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: orion-user-admin
+      namespace: orion-dev
+    subjects:
+      - kind: User
+        name: alice
+        apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: ClusterRole
+      name: admin
+      apiGroup: rbac.authorization.k8s.io
+
+  orion-rb-nsdeleter.yaml: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: orion-user-namespace-deleter
+      namespace: orion-dev
+    subjects:
+      - kind: User
+        name: alice
+        apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: ClusterRole
+      name: capsule-namespace-deleter
+      apiGroup: rbac.authorization.k8s.io
+
+  orion-deploy.yaml: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx-orion
+      namespace: orion-dev
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: nginx-orion
+      template:
+        metadata:
+          labels:
+            app: nginx-orion
+        spec:
+          containers:
+            - name: nginx
+              image: nginx:1.25
+              ports:
+                - containerPort: 80
+
+  orion-svc.yaml: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx-orion
+      namespace: orion-dev
+    spec:
+      selector:
+        app: nginx-orion
+      ports:
+        - port: 80
+          targetPort: 80
+
+  # ----------------------
+  # atlas
+  # ----------------------
+  atlas-ns.yaml: |
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: atlas-dev
+      labels:
+        capsule.clastix.io/tenant: atlas
+
+  atlas-rb-admin.yaml: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: atlas-group-admin
+      namespace: atlas-dev
+    subjects:
+      - kind: Group
+        name: atlas
+        apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: ClusterRole
+      name: admin
+      apiGroup: rbac.authorization.k8s.io
+
+  atlas-rb-nsdeleter.yaml: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: atlas-group-namespace-deleter
+      namespace: atlas-dev
+    subjects:
+      - kind: Group
+        name: atlas
+        apiGroup: rbac.authorization.k8s.io
+    roleRef:
+      kind: ClusterRole
+      name: capsule-namespace-deleter
+      apiGroup: rbac.authorization.k8s.io
+
+  atlas-deploy.yaml: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx-atlas
+      namespace: atlas-dev
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: nginx-atlas
+      template:
+        metadata:
+          labels:
+            app: nginx-atlas
+        spec:
+          containers:
+            - name: nginx
+              image: nginx:1.25
+              ports:
+                - containerPort: 80
+
+  atlas-svc.yaml: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx-atlas
+      namespace: atlas-dev
+    spec:
+      selector:
+        app: nginx-atlas
+      ports:
+        - port: 80
+          targetPort: 80
